@@ -9,8 +9,8 @@
  * {
  *     notify(): void
  *     observe(observer: ((data: T | null)=>void))
- *     set_data(data: (T | null) | ((Wrapper<T| null>)=>void)): void
- *     get_data(): T | null
+ *     setData(data: (T | null) | ((Wrapper<T| null>)=>void)): void
+ *     getData(): T | null
  * }
  *
  */
@@ -23,8 +23,8 @@ function LiveData(data)
         wrapper.data = data;
     }
 
-    this.m_wraped_data = wrapper;
-    this.m_observers = [];
+    this.mWrapedData = wrapper;
+    this.mObservers = [];
 }
 
 /**
@@ -33,9 +33,9 @@ function LiveData(data)
  */
 LiveData.prototype.notify = function ()
 {
-    for(var observer of this.m_observers)
+    for(var observer of this.mObservers)
     {
-        observer(this.m_wraped_data.data);
+        observer(this.mWrapedData.data);
     }
 };
 
@@ -52,7 +52,7 @@ LiveData.prototype.observe = function (observer)
         return;
     }
 
-    this.m_observers.push(observer);
+    this.mObservers.push(observer);
 };
 
 /**
@@ -62,19 +62,19 @@ LiveData.prototype.observe = function (observer)
  *  This function also accept the value of type T | null because only easier syntax  when you don't need previous value
  *  to update the data
  */
-LiveData.prototype.set_data = function (setter)
+LiveData.prototype.setData = function (setter)
 {
     if(typeof(setter) === 'function')
     {
-        setter(this.m_wraped_data)
+        setter(this.mWrapedData)
     }
     else if(setter === undefined)
     {
-        this.m_wraped_data.data = null;
+        this.mWrapedData.data = null;
     }
     else
     {
-        this.m_wraped_data.data = setter;
+        this.mWrapedData.data = setter;
     }
 };
 
@@ -83,7 +83,7 @@ LiveData.prototype.set_data = function (setter)
  *
  * This data is used to return data to user
  */
-LiveData.prototype.get_data = function ()
+LiveData.prototype.getData = function ()
 {
-    return this.m_wraped_data.data;
+    return this.mWrapedData.data;
 };
