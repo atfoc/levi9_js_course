@@ -76,6 +76,8 @@ LiveData.prototype.setData = function (setter)
     {
         this.mWrapedData.data = setter;
     }
+
+    this.notify();
 };
 
 
