@@ -25,6 +25,7 @@ function LiveData(data)
 
     this.mWrapedData = wrapper;
     this.mObservers = [];
+    this.mBlockedNotifications = false;
 }
 
 /**
@@ -35,7 +36,10 @@ LiveData.prototype.notify = function ()
 {
     for(var observer of this.mObservers)
     {
-        observer(this.mWrapedData.data);
+        if(!this.mBlockedNotifications)
+        {
+            observer(this.mWrapedData.data);
+        }
     }
 };
 
@@ -88,4 +92,46 @@ LiveData.prototype.setData = function (setter)
 LiveData.prototype.getData = function ()
 {
     return this.mWrapedData.data;
+};
+
+LiveData.prototype.blockNotifications = function (value)
+{
+    if(value !== null && value !== undefined)
+    {
+        this.mBlockedNotifications = value;
+    }
+};
+
+
+function ImmutableLiveData(liveData)
+{
+    if(liveData !== undefined)
+    {
+        this.mData = liveData;
+    }
+    else
+    {
+        this.mData = null;
+    }
+}
+
+ImmutableLiveData.prototype.getData = function ()
+{
+    if(this.mData !== null)
+    {
+        return this.mData.getData();
+    }
+    else
+    {
+        return null;
+    }
+
+};
+
+ImmutableLiveData.prototype.observe = function (observer)
+{
+    if(this.mData !== null)
+    {
+        this.mData.observe(observer);
+    }
 };
