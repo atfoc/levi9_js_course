@@ -1,0 +1,26 @@
+.col
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.row
+{
+    display: flex;
+    flex-direction: row;
+}
+
+.grow-1
+{
+    flex-grow: 1;
+}
+
+.hidden
+{
+    visibility: hidden;
+}
+
+.d-none
+{
+    display: none;
+}
