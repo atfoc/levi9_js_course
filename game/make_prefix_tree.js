@@ -1,5 +1,25 @@
 const fs = require('fs');
 
+function doesMakeCompundLetter(letter, nextLetter)
+{
+    if(letter === 'D' && nextLetter === 'Ž')
+    {
+        letter = 'DŽ';
+        return true;
+    }
+    else if(letter === 'L' && nextLetter === 'J')
+    {
+        letter = 'LJ';
+        return true;
+    }
+    else if(letter === 'N' && nextLetter === 'J')
+    {
+        letter = 'NJ';
+        return true;
+    }
+    return false;
+}
+
 function addToPrefixTree(tree, word)
 {
     if(word.length === 0)
@@ -7,9 +27,20 @@ function addToPrefixTree(tree, word)
         return;
     }
 
-    for(let i in word)
+    for(let i = 0; i < word.length; ++i)
     {
         let  letter = word[i].toUpperCase();
+        if(i+1 < word.length)
+        {
+            let nextLetter = word[i+1].toUpperCase();
+
+            if(doesMakeCompundLetter(letter, nextLetter))
+            {
+                ++i;
+                letter = letter + nextLetter;
+            }
+        }
+
         if(tree[letter] === undefined)
         {
             tree[letter] = {final: false}
@@ -32,7 +63,6 @@ let tree = {final: false};
 
 for(let word of words)
 {
-
     addToPrefixTree(tree, word);
 }
 
