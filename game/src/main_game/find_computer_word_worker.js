@@ -3,9 +3,9 @@ onmessage = function (message)
     let prefixTree  = message.data.prefixTree;
     let allowedLetters = message.data.allowedLetters;
 
-    let result = {word: ''};
+    let result = {word: []};
 
-    let stack = [{tree: prefixTree, word: '', lettersLeft: allowedLetters}];
+    let stack = [{tree: prefixTree, word: [], lettersLeft: allowedLetters}];
 
 
     while(stack.length > 0)
@@ -26,7 +26,7 @@ onmessage = function (message)
             if(top.tree[top.lettersLeft[letter]] !== undefined)
             {
                 stack.push({tree: top.tree[top.lettersLeft[letter]],
-                    word: top.word + top.lettersLeft[letter],
+                    word: top.word.concat([top.lettersLeft[letter]]),
                     lettersLeft: (top.lettersLeft.slice(0, letter)).concat(top.lettersLeft.slice(letter+1))});
             }
         }
