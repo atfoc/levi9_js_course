@@ -1,8 +1,13 @@
 var Main_game_ChooseLettersControler_ALL_LETTERS =  [
-    'A', "B", "C", "Č", "Ć", "D", "Đ", "DZ", "E",
-    "F", "G", "H", "I", "J", "K", "L", "M", "N", "LJ", "NJ",
-    "O", "P", "R", "S", "Š", "T", "U", "V", "Z", "Ž"
+    "B", "C", "Č", "Ć", "D", "Đ", "DŽ",
+    "F", "G", "H", "J", "K", "L", "M", "N", "LJ", "NJ",
+     "P", "R", "S", "Š", "T",  "V", "Z", "Ž"
 ];
+
+let Main_game_ChooseLettersController_VOWELS = [
+    'A', 'E', 'I', 'O', 'U'
+];
+const Main_game_ChooseLettersController_NUMBER_OF_VOWELS = 4;
 
 var Main_game_ChooseLettersControler_LETTERS_COUNT =  12;
 var Main_game_PlayController_PREFEX_TREE_URL = 'prefix_tree.json';
@@ -36,9 +41,16 @@ function Main_game_ChooseLettersController(ui, prefixTree)
         {
             this.mCurrentLetter.setData(function (wrappedLetter)
             {
-                wrappedLetter.data =
-                    (wrappedLetter.data +  1) % Main_game_ChooseLettersControler_ALL_LETTERS.length;
-            });
+                if(this.mLetters.getData().length< Main_game_ChooseLettersController_NUMBER_OF_VOWELS)
+                {
+                    wrappedLetter.data = (wrappedLetter.data+1) % Main_game_ChooseLettersController_VOWELS.length;
+                }
+                else
+                {
+                    wrappedLetter.data =
+                        (wrappedLetter.data +  1) % Main_game_ChooseLettersControler_ALL_LETTERS.length;
+                }
+            }.bind(this));
         }.bind(this), 100);
     }.bind(this), 0);
 
@@ -64,11 +76,21 @@ Main_game_ChooseLettersController.prototype.chooseLetter = function ()
     {
         if(wrappedLetters.data.length < Main_game_ChooseLettersControler_LETTERS_COUNT)
         {
-            wrappedLetters.data.push(Main_game_ChooseLettersControler_ALL_LETTERS[this.mCurrentLetter.getData()]);
+            if(wrappedLetters.data.length < Main_game_ChooseLettersController_NUMBER_OF_VOWELS)
+            {
+                wrappedLetters.data.push(Main_game_ChooseLettersController_VOWELS[this.mCurrentLetter.getData()]);
+            }
+            else
+            {
+                wrappedLetters.data.push(Main_game_ChooseLettersControler_ALL_LETTERS[this.mCurrentLetter.getData()]);
+            }
         }
     }.bind(this));
 
-    this.mCurrentLetter.setData(Math.floor(Math.random()*(Main_game_ChooseLettersControler_ALL_LETTERS.length-1)));
+    if(this.mLetters.letters >= Main_game_ChooseLettersController_NUMBER_OF_VOWELS)
+    {
+        this.mCurrentLetter.setData(Math.floor(Math.random()*(Main_game_ChooseLettersControler_ALL_LETTERS.length-1)));
+    }
 
     if(this.mLetters.getData().length >= Main_game_ChooseLettersControler_LETTERS_COUNT)
     {
@@ -265,7 +287,6 @@ Main_game_PlayController.prototype.unPlayLetter = function (position)
             // wrappedGrayed.data = wrappedGrayed.data.splice(this.mTransformMap[position], 1);
             var index = wrappedGrayed.data.findIndex(function(value){return value === this.mTransformMap[position]}.bind(this));
 
-            console.log(index);
             if(index !== -1)
             {
                 wrappedGrayed.data.splice(index, 1);
@@ -323,13 +344,13 @@ function Main_game_ScoreController(ui, playerWord, promiseComputerWord, isUserWo
     this.mUi = ui;
     this.mPlayerWord = playerWord;
     this.mIsPlayerWordValid = isUserWordValid;
-    this.mComputerWord = new LiveData('');
+    this.mComputerWord = new LiveData(null);
 
     setTimeout(function ()
     {
         promiseComputerWord.then(function (message)
         {
-            this.mComputerWord.setData(message);
+            this.mComputerWord.setData(message.data);
         }.bind(this));
     }.bind(this), 0);
 
