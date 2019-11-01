@@ -22,6 +22,7 @@ onmessage = function (message)
 
         for(let letter in top.lettersLeft)
         {
+            letter = parseInt(letter, 10);
             if(top.tree[top.lettersLeft[letter]] !== undefined)
             {
                 stack.push({tree: top.tree[top.lettersLeft[letter]],
@@ -33,5 +34,4 @@ onmessage = function (message)
 
     postMessage(result.word);
 };
-
 
