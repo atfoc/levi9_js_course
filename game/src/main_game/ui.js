@@ -33,13 +33,21 @@ function Main_game_makeUi()
     ui.btnDone = document.createElement('button');
     ui.btnDone.textContent = 'Done';
 
+    ui.btnPlayAgain = document.createElement('button');
+
+    ui.btnPlayAgain.textContent  = 'Play again';
+
+    ui.divIsPlayerWordValid = document.createElement('div');
+
     ui.div.append(
         ui.btnStop,
         ui.progressBar,
         ui.divForChoosingLetters,
         ui.divForPlayingLetters,
         ui.divForComputerWord,
-        ui.btnDone
+        ui.btnDone,
+        ui.divIsPlayerWordValid,
+        ui.btnPlayAgain
         );
 
     return ui;
@@ -118,7 +126,13 @@ function Main_game_mainControllerObsever(wrappedController)
                     return;
                 }
 
-                if(wrappedController.controller.getLetters().getData().length < Main_game_ChooseLettersControler_LETTERS_COUNT)
+                if(wrappedController.controller.getLetters().getData().length< Main_game_ChooseLettersController_NUMBER_OF_VOWELS)
+                {
+                    wrappedController.controller.mUi
+                        .lettersDivs[wrappedController.controller.getLetters().getData().length].innerText =
+                        Main_game_ChooseLettersController_VOWELS[currentLetter];
+                }
+                else if(wrappedController.controller.getLetters().getData().length < Main_game_ChooseLettersControler_LETTERS_COUNT)
                 {
                     wrappedController.controller.mUi
                         .lettersDivs[wrappedController.controller.getLetters().getData().length].innerText =
@@ -137,7 +151,6 @@ function Main_game_mainControllerObsever(wrappedController)
 
             wrappedController.controller.mUi.btnStop.onclick = function ()
             {
-                console.log(wrappedController);
                 if(wrappedController.controller === null)
                 {
                     return;
@@ -205,7 +218,6 @@ function Main_game_mainControllerObsever(wrappedController)
 
             wrappedController.controller.getGrayedOutLetters().observe(function (grayedOut)
             {
-                console.log(grayedOut);
                 if(wrappedController.controller === null)
                 {
                     return;
@@ -270,7 +282,9 @@ function Main_game_mainControllerObsever(wrappedController)
                     'div',
                     'divForChoosingLetters',
                     'divForPlayingLetters',
-                    'divForComputerWord'
+                    'divForComputerWord',
+                    'btnPlayAgain',
+                    'divIsPlayerWordValid'
                 ]);
 
             wrappedController.controller.getComputerWord().observe(function (word)
@@ -280,9 +294,36 @@ function Main_game_mainControllerObsever(wrappedController)
                     return;
                 }
 
+                if(word !== null)
+                {
+                    for(let i in word)
+                    {
+                        wrappedController.controller.mUi.computerLettersDivs[i].innerText = word[i];
+                    }
+                }
+
 
 
             });
+
+            wrappedController.controller.mUi.btnPlayAgain.onclick = function ()
+            {
+                if(wrappedController.controller === null)
+                {
+                    return;
+                }
+
+                setTimeout(function ()
+                {
+                    if(wrappedController.changeController !== null)
+                    {
+                        wrappedController.changeController(new Main_game_InitialController());
+                    }
+                }, 0);
+            };
+
+            wrappedController.controller.mUi.divIsPlayerWordValid.innerText =
+                (wrappedController.controller.mIsPlayerWordValid ? 'Your word is valid' : 'Your word is not valid');
 
             // document.body.innerText = wrappedController.controller.mIsPlayerWordValid;
         }
