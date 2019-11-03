@@ -41,6 +41,33 @@ function Main_game_makeUi()
 
     ui.divForPoints = document.createElement('div');
 
+    ui.divSubmitScore = document.createElement('div');
+    ui.divSubmitScore.classList.add('row');
+
+    ui.lbDoYouWantToSubmitScore= document.createElement('div');
+    ui.lbDoYouWantToSubmitScore.innerText = 'Do you want to submit score?';
+
+    ui.btnYesSubmitScore = document.createElement('button');
+    ui.btnYesSubmitScore.textContent = 'Yes, submit score';
+    ui.btnNoSubmitScore = document.createElement('button');
+    ui.btnNoSubmitScore.textContent = 'No, don\'t submit score';
+
+    ui.divForNick = document.createElement('div');
+    ui.divForNick.classList.add('row');
+
+    ui.lbYouNick = document.createElement('div');
+    ui.lbYouNick.innerText = 'Your nick: ';
+
+    ui.txtNick = document.createElement('input');
+    ui.txtNick.type = 'text';
+
+    ui.btnSubmit = document.createElement('button');
+    ui.btnSubmit.textContent = 'Submit';
+
+    ui.divSubmitScore.append(ui.lbDoYouWantToSubmitScore, ui.btnYesSubmitScore, ui.btnNoSubmitScore);
+    ui.divForNick.append(ui.lbYouNick, ui.txtNick);
+
+
     ui.div.append(
         ui.btnStop,
         ui.progressBar,
@@ -50,6 +77,9 @@ function Main_game_makeUi()
         ui.btnDone,
         ui.divIsPlayerWordValid,
         ui.divForPoints,
+        ui.divSubmitScore,
+        ui.divForNick,
+        ui.btnSubmit,
         ui.btnPlayAgain
         );
 
@@ -286,9 +316,13 @@ function Main_game_mainControllerObsever(wrappedController)
                     'divForChoosingLetters',
                     'divForPlayingLetters',
                     'divForComputerWord',
-                    'btnPlayAgain',
                     'divIsPlayerWordValid',
-                    'divForPoints'
+                    'divForPoints',
+                    'divSubmitScore',
+                    'lbDoYouWantToSubmitScore',
+                    'btnYesSubmitScore',
+                    'btnNoSubmitScore',
+
                 ]);
 
             wrappedController.controller.getComputerWord().observe(function (word)
@@ -339,7 +373,71 @@ function Main_game_mainControllerObsever(wrappedController)
             wrappedController.controller.mUi.divIsPlayerWordValid.innerText =
                 (wrappedController.controller.mIsPlayerWordValid ? 'Your word is valid' : 'Your word is not valid');
 
-            // document.body.innerText = wrappedController.controller.mIsPlayerWordValid;
+            wrappedController.controller.getSubmitPoints().observe(function (submitPoints)
+            {
+                if(wrappedController.controller === null)
+                {
+                    return;
+                }
+
+                if(submitPoints === null)
+                {
+                    return;
+                }
+
+                if(submitPoints)
+                {
+                    showElements([
+                        wrappedController.controller.mUi.divForNick,
+                        wrappedController.controller.mUi.lbYouNick,
+                        wrappedController.controller.mUi.txtNick,
+                        wrappedController.controller.mUi.btnSubmit
+                    ]);
+                }
+                else
+                {
+                    showElements([wrappedController.controller.mUi.btnPlayAgain]);
+                }
+
+                hideElements([wrappedController.controller.mUi.divSubmitScore]);
+            });
+
+
+
+            const submitScoreChoiceFunction = function (choice)
+            {
+                if(wrappedController.controller === null)
+                {
+                    return;
+                }
+
+                wrappedController.controller.setWantToSubmitScore(choice);
+            };
+
+            wrappedController.controller.mUi.btnYesSubmitScore.onclick = submitScoreChoiceFunction.bind(this, true);
+            wrappedController.controller.mUi.btnNoSubmitScore.onclick = submitScoreChoiceFunction.bind(this, false);
+            wrappedController.controller.mUi.btnSubmit.onclick = function ()
+            {
+                if(wrappedController.controller === null)
+                {
+                    return;
+                }
+
+                wrappedController.controller.mUi.btnSubmit.disabled = true;
+
+                wrappedController.controller.submitScore()
+                    .then(function ()
+                    {
+                        if(wrappedController.controller === null)
+                        {
+                            return;
+                        }
+
+                        showElements([wrappedController.controller.mUi.btnPlayAgain]);
+                        hideElements([wrappedController.controller.mUi.divForNick,
+                        wrappedController.controller.mUi.btnSubmit]);
+                    });
+            };
         }
     }
 }

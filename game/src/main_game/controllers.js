@@ -347,6 +347,8 @@ function Main_game_ScoreController(ui, playerWord, promiseComputerWord, isUserWo
     this.mIsPlayerWordValid = isUserWordValid;
     this.mComputerWord = new LiveData(null);
     this.mPoints = new LiveData(0);
+    this.mSubmitPoints = new LiveData(null);
+
 
     setTimeout(function ()
     {
@@ -375,6 +377,27 @@ Main_game_ScoreController.prototype.getComputerWord = function ()
 Main_game_ScoreController.prototype.getPoints = function ()
 {
     return new ImmutableLiveData(this.mPoints);
+};
+
+Main_game_ScoreController.prototype.getSubmitPoints = function ()
+{
+    return new ImmutableLiveData(this.mSubmitPoints);
+};
+
+Main_game_ScoreController.prototype.setWantToSubmitScore = function (choice)
+{
+    this.mSubmitPoints.setData(choice);
+};
+
+Main_game_ScoreController.prototype.submitScore = function ()
+{
+    return new Promise(function (resolve)
+    {
+        setTimeout(function ()
+        {
+            resolve();
+        }, 1000);
+    });
 };
 
 function Main_game_ScoreController_calculatePoints(isPlayerWordValid, playerWord, computerWord)
