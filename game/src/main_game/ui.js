@@ -39,6 +39,8 @@ function Main_game_makeUi()
 
     ui.divIsPlayerWordValid = document.createElement('div');
 
+    ui.divForPoints = document.createElement('div');
+
     ui.div.append(
         ui.btnStop,
         ui.progressBar,
@@ -47,6 +49,7 @@ function Main_game_makeUi()
         ui.divForComputerWord,
         ui.btnDone,
         ui.divIsPlayerWordValid,
+        ui.divForPoints,
         ui.btnPlayAgain
         );
 
@@ -284,7 +287,8 @@ function Main_game_mainControllerObsever(wrappedController)
                     'divForPlayingLetters',
                     'divForComputerWord',
                     'btnPlayAgain',
-                    'divIsPlayerWordValid'
+                    'divIsPlayerWordValid',
+                    'divForPoints'
                 ]);
 
             wrappedController.controller.getComputerWord().observe(function (word)
@@ -304,6 +308,16 @@ function Main_game_mainControllerObsever(wrappedController)
 
 
 
+            });
+
+            wrappedController.controller.getPoints().observe(function (points)
+            {
+                if(wrappedController.controller === null)
+                {
+                    return;
+                }
+
+                wrappedController.controller.mUi.divForPoints.innerText = 'You have won ' + points.toString();
             });
 
             wrappedController.controller.mUi.btnPlayAgain.onclick = function ()

@@ -43,12 +43,12 @@ function Main_game_ChooseLettersController(ui, prefixTree)
             {
                 if(this.mLetters.getData().length< Main_game_ChooseLettersController_NUMBER_OF_VOWELS)
                 {
-                    wrappedLetter.data = (wrappedLetter.data+1) % Main_game_ChooseLettersController_VOWELS.length;
+                    wrappedLetter.data = Math.floor(Math.random() *(Main_game_ChooseLettersController_VOWELS.length-1));
                 }
                 else
                 {
                     wrappedLetter.data =
-                        (wrappedLetter.data +  1) % Main_game_ChooseLettersControler_ALL_LETTERS.length;
+                         Math.floor(Math.random()*(Main_game_ChooseLettersControler_ALL_LETTERS.length-1));
                 }
             }.bind(this));
         }.bind(this), 100);
@@ -329,6 +329,7 @@ function  Main_game_PlayController_isUserWordValid(word, prefixTree)
         return false;
     }
 
+    word = word.slice();
     while(prefixTree !== undefined && word.length > 0)
     {
         prefixTree = prefixTree[word[0]];
@@ -345,12 +346,15 @@ function Main_game_ScoreController(ui, playerWord, promiseComputerWord, isUserWo
     this.mPlayerWord = playerWord;
     this.mIsPlayerWordValid = isUserWordValid;
     this.mComputerWord = new LiveData(null);
+    this.mPoints = new LiveData(0);
 
     setTimeout(function ()
     {
         promiseComputerWord.then(function (message)
         {
             this.mComputerWord.setData(message.data);
+            this.mPoints.setData(
+                Main_game_ScoreController_calculatePoints(this.mIsPlayerWordValid, this.mPlayerWord, message.data));
         }.bind(this));
     }.bind(this), 0);
 
@@ -363,8 +367,25 @@ Main_game_ScoreController.prototype.tearDown = function()
 
 };
 
-
 Main_game_ScoreController.prototype.getComputerWord = function ()
 {
     return new ImmutableLiveData(this.mComputerWord);
 };
+
+Main_game_ScoreController.prototype.getPoints = function ()
+{
+    return new ImmutableLiveData(this.mPoints);
+};
+
+function Main_game_ScoreController_calculatePoints(isPlayerWordValid, playerWord, computerWord)
+{
+    let points = 0;
+    if(!isPlayerWordValid)
+    {
+        return 0;
+    }
+
+    return playerWord.length*2 + ((computerWord.length === playerWord.length) ? 3 : 0) +
+        ((playerWord.length > computerWord.length) ? 6 : 0);
+}
+
