@@ -1,6 +1,5 @@
 function showHideUi(ui, toShow)
 {
-    var classToAddOrRemove = 'd-none';
 
     for(var key of Object.keys(ui))
     {
@@ -8,12 +7,36 @@ function showHideUi(ui, toShow)
         {
             if(toShow.find(function (el) {return el === key;}) !== undefined)
             {
-                ui[key].classList.remove(classToAddOrRemove);
+                showElements([ui[key]]);
             }
             else
             {
-                ui[key].classList.add(classToAddOrRemove);
+                hideElements([ui[key]]);
             }
+        }
+    }
+}
+
+function showElements(elements)
+{
+    const classToAddOrRemove = 'd-none';
+    for(let el of elements)
+    {
+        if(el !== undefined && el !== null && el.classList !== undefined)
+        {
+            el.classList.remove(classToAddOrRemove);
+        }
+    }
+}
+
+function hideElements(elements)
+{
+    const classToAddOrRemove = 'd-none';
+    for(let el of elements)
+    {
+        if(el !== undefined && el !== null && el.classList !== undefined)
+        {
+            el.classList.add(classToAddOrRemove);
         }
     }
 }
