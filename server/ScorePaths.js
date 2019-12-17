@@ -1,8 +1,8 @@
-import {ScoreController} from "./ScoreController";
+const {ScoreController} = require("./ScoreController");
 
-export function setupPaths(expressApp) {
-    setupGetHighScores();
-    setupPostHighScore();
+function setupPaths(expressApp) {
+    setupGetHighScores(expressApp);
+    setupPostHighScore(expressApp);
 }
 
 function setupGetHighScores(expressApp){
@@ -13,10 +13,17 @@ function setupGetHighScores(expressApp){
         {
             top = undefined;
         }
-        else if(typeof(top) !== 'number')
+        else if(top !== undefined && typeof(top) !== 'number')
         {
-            response.send(400, 'top parameter must be a number');
-            return ;
+            if(typeof(top) === 'string')
+            {
+                top = parseInt(top, 10);
+                if(isNaN(top))
+                {
+                    response.send(400, 'top parameter must be a number');
+                    return;
+                }
+            }
         }
 
         new ScoreController().getHighScores(response, top);
@@ -25,7 +32,7 @@ function setupGetHighScores(expressApp){
 
 function setupPostHighScore(expressapp){
     expressapp.post('/highScores', (request, response)=> {
-        let data = request.data;
+        let data = request.body;
 
         const errorMessage = 'Request must contain json data {nickname: string, score: number}';
         if(data === undefined || data === null)
@@ -50,3 +57,5 @@ function setupPostHighScore(expressapp){
 
     })
 }
+
+module.exports = {setupPaths: setupPaths};
