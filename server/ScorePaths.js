@@ -1,8 +1,10 @@
 const {ScoreController} = require("./ScoreController");
+const static = require('express').static;
 
 function setupPaths(expressApp) {
     setupGetHighScores(expressApp);
     setupPostHighScore(expressApp);
+    setPublicServe(expressApp);
 }
 
 function setupGetHighScores(expressApp){
@@ -56,6 +58,10 @@ function setupPostHighScore(expressapp){
         new ScoreController().addHighScore(response, data.nickname, data.score);
 
     })
+}
+
+function setPublicServe(expressApp) {
+    expressApp.use(static('public'))
 }
 
 module.exports = {setupPaths: setupPaths};
