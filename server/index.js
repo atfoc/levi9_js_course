@@ -11,4 +11,4 @@ app.use(bodyParser.json());
 setupPaths(app);
 
 
-app.listen(3000);
+app.listen(port);
