@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game</title>
+    <script src="lib/live_data.js"></script>
+    <script src="lib/i_controller.js"></script>
+    <script src="lib/controller_container.js"></script>
+    <script src="src/utils.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="style.css"/>
+    <link type="text/css" rel="stylesheet" href="src/main_game/style.css"/>
+
+
+</head>
+<body>
+
+
+
+</body>
+<script src="src/main_game/controllers.js"></script>
+<script src="src/main_game/ui.js"></script>
+<script>
+    /*Definition of screen state*/
+    var globalControllerContainer = new ControllerContainer();
+
+    /*Observing state change to change screen*/
+    globalControllerContainer.observe(Main_game_mainControllerObsever);
+    globalControllerContainer.changeController(new Main_game_InitialController());
+</script>
+</html>
