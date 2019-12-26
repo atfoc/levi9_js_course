@@ -20,7 +20,7 @@ class ScoreController {
                         _id:false
                     };
 
-                let cursor = collection.find({}).project(projection).sort({score: 1});
+                let cursor = collection.find({}).project(projection).sort({score: -1});
 
                 if(limit !== undefined) {
                     cursor = cursor.limit(limit);
