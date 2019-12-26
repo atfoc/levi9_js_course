@@ -1,0 +1,18 @@
+.table-row
+{
+    display: flex;
+    flex-direction: row;
+    border: 1px black solid;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+
+.table-col
+{
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+
+}
