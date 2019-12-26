@@ -393,11 +393,13 @@ Main_game_ScoreController.prototype.submitScore = function ()
 {
     return new Promise(function (resolve)
     {
-        setTimeout(function ()
-        {
-            resolve();
-        }, 1000);
-    });
+        const req = new XMLHttpRequest();
+        req.open('POST', 'http://localhost:3000/highscores');
+        req.setRequestHeader('Content-Type', 'application/json');
+        req.send(JSON.stringify({nickname: this.mUi.txtNick.value, score: this.mPoints.getData()}));
+
+        setTimeout(()=>{resolve()}, 1000);
+    }.bind(this));
 };
 
 function Main_game_ScoreController_calculatePoints(isPlayerWordValid, playerWord, computerWord)
