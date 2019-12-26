@@ -7,7 +7,7 @@ export function HighScores(props)
 {
     const [highscores, setHighScores] = useState(null);
 
-    const url = (props.url !== null && props.url !== undefined) ? props.url : 'http://localhost:3001/highScores';
+    const url = (props.url !== null && props.url !== undefined) ? props.url : 'http://localhost:3000/highScores';
     useEffect(()=> {
         fetch(url)
             .then(response=>{
